@@ -1,9 +1,9 @@
-<?php include('app.php') ?>
+<?php include('../app.php') ?>
 <?php 
- include('inc/nav.php');	
- include('db.php'); 
+ include('../inc/nav.php');	
+ include('../db.php'); 
 
- $sql = "SELECT * FROM employee" ;
+ $sql = "SELECT * FROM notice" ;
  $result = mysqli_query($conn, $sql);
  
  if(isset($_POST['insert'])) {
@@ -48,85 +48,39 @@
 ?>
 <section class="content pt-5">
   <div class="container bg-primary">
-    <div class="row">
-     <div class="col p-5">
-	 <?php include('inc/success-alert.php'); ?>
-<button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">New Record</button>
-
-<!-- Modal -->
-<div class="modal " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Insert New Record Beta </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-	  
-   <form method="post" action="index.php">
-	<div class="mb-3">
-    <label for="exampleInputName" class="form-label">Name</label>
-    <input type="name" name="name" class="form-control" id="exampleInputName">
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-  </div>
-  <div class="mb-3">
-   <label for="exampleInputEmail1" class="form-label">Gender</label><br>
-		   <!-- Default radio -->
-		<input type="radio" name="gender" value="Male" checked>Male<br> <!--This one is automatically checked when the user opens the page -->
-<input type="radio" name="gender" value="Female">Female
-  </div>
-  <button type="submit" name="insert" class="btn btn-primary">Submit</button>
-</form>
-
-      </div>
-      
+   <div class="row"><div class="col p-1">
+     <a href="add_notice.php" class="btn btn-success float-end">New Record</a>
     </div>
-  </div>
-</div>
+    <div class="row mx-auto">
+	 
+     <div class="col p-5">
+	 <?php include('../inc/success-alert.php'); ?>
 
-<table class="table table-hover">
-  <thead>
-    <tr class="table-primary">
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Gender</th>
-	  <th scope="col">Action</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    
+
+
+
+  
+
 	  <?php 
 	  
 	  if(mysqli_num_rows($result)>0){
+		  echo "<div class='d-flex flex-wrap'>";
 	   while($row = mysqli_fetch_assoc($result)){
-		  echo " <tr class='table-dark'>";
-		  echo "<td>".$row['name']."</td>";
-		   echo "<td>".$row['email']."</td>";
-		    echo "<td>".$row['gender']."</td>";
-			 echo "<td>"."
-			 <button type='button' class='btn btn-sm btn-warning my-2' data-bs-toggle='modal' data-bs-target='#editBackdrop' data-id='" . $row['id'] . "' data-name='". $row['name'] . "' data-email='" . $row['email'] . "' data-gender='" .$row['gender']. "'>Edit</button>";?>
-			  <form method='post' onsubmit="return confirm('Are you sure?');" action='index.php'>
-			  <input type='hidden' name='id' value='<?= $row['id'] ?>'/>
-			  <button type='submit' name="delete" class='btn btn-sm btn-danger remove'>Delete</button>
-			  </form>
-			  <?php echo"</td>";
-					echo "</tr>";
+					echo "<div class='card m-2 border-primary mb-3' style='max-width: 21rem;'>";
+					echo " <div class='d-flex flex-column justify-content-between card-header'> 
+							<div>Notice</div>
+							<div>Expiry : ". date('F j, Y', strtotime($row['expiry']))."</div>
+					       </div>
+					<div class='card-body'>";
+					echo "<h4 class='card-title'>".$row['subject']."</h4>";
+					echo "<p class='card-text'>".$row['message']."</p></div>";
+					echo "<div class='card-footer text-muted'><a href='edit_notice.php?id=".$row['id']."' class='btn btn-sm btn-warning'>Edit </a></div></div>";
 				}
+			echo "</div>";		
 			} else {
-					echo "0 results";
-			}
+					echo "No Notice Available";
+		}
 	  ?>
-
-     
-    
-    
-  </tbody>
-</table>
 
     
 	 </div>
